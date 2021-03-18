@@ -32,7 +32,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 //        onCreate(db);
    }
 
-    public long insertData(Notes notes){
+    public long insertData(Note notes){
         SQLiteDatabase sqLiteDatabase=getWritableDatabase();
         ContentValues contentValues=new ContentValues();
         contentValues.put(Constants.COLUMN_ENGLISH,notes.getEnglish());
@@ -43,14 +43,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public List<Notes> getAllNotes(){
+    public List<Note> getAllNotes(){
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
-        List<Notes> dataList = new ArrayList<>();
+        List<Note> dataList = new ArrayList<>();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM "+Constants.TABLE_NAME,
                 null);
         if (cursor.moveToFirst()){
             do {
-                Notes note = new Notes(cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_ID)),
+                Note note = new Note(cursor.getInt(cursor.getColumnIndex(Constants.COLUMN_ID)),
                         cursor.getString(cursor.getColumnIndex(Constants.COLUMN_ENGLISH)),
                         cursor.getString(cursor.getColumnIndex(Constants.COLUMN_BANGLA)));
 
@@ -61,7 +61,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public int updateData(Notes notes){
+    public int updateData(Note notes){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(Constants.COLUMN_ENGLISH,notes.getEnglish());

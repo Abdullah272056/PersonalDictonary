@@ -1,21 +1,39 @@
 package com.example.personaldictonary;
 
-public class Notes {
-int id;
-String english,bangla;
+import android.content.Context;
 
-    public Notes(int id, String english, String bangla) {
+public class Note {
+    Context context;
+    int id;
+    String english,bangla;
+
+    public Note(Context context, int id, String english, String bangla) {
+        this.context = context;
         this.id = id;
         this.english = english;
         this.bangla = bangla;
     }
 
-    public Notes() {
+    public Note() {
     }
 
-    public Notes(String english, String bangla) {
+    public Note(int id, String english, String bangla) {
+        this.id = id;
         this.english = english;
         this.bangla = bangla;
+    }
+
+    public Note(String english, String bangla) {
+        this.english = english;
+        this.bangla = bangla;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     public int getId() {

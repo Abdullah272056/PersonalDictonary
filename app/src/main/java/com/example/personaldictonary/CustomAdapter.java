@@ -1,8 +1,6 @@
 package com.example.personaldictonary;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.speech.tts.TextToSpeech;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,20 +17,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> implements Filterable {
     Context context;
-    private List<Notes> allNotes;
-    List<Notes> copyAllNotes;
+    private List<Note> allNotes;
+    List<Note> copyAllNotes;
     private DataBaseHelper databaseHelper;
     TextToSpeech t1;
 
-    public CustomAdapter(Context context, List<Notes> allNotes) {
+    public CustomAdapter(Context context, List<Note> allNotes) {
         this.context = context;
         this.allNotes = allNotes;
-     this.context=context;
+        this.context=context;
         databaseHelper=new DataBaseHelper(context);
 
         copyAllNotes = new ArrayList<>(allNotes);//for searchView//dataList's copy
@@ -74,7 +73,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         });
 
 
-//////////////////
+
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -83,9 +82,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
                 View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_operation,null);
 
                 builder.setView(view);
-
                 final androidx.appcompat.app.AlertDialog alertDialog = builder.create();
-
 
                 TextView updateTextView=view.findViewById(R.id.updateTextViewId);
                 TextView deleteTextView=view.findViewById(R.id.deleteTextViewId);
@@ -141,13 +138,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     Filter filterData =new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
-            List<Notes> filterList=new ArrayList<>();//for filter data keeping
+            List<Note> filterList=new ArrayList<>();
+            //for filter data keeping
             if (charSequence==null||charSequence.length()==0){
                 filterList.addAll(copyAllNotes);
             }
             else{
                 String value=charSequence.toString().toLowerCase().trim();
-                for (Notes notes:copyAllNotes){
+                for (Note notes:copyAllNotes){
                     if (notes.getEnglish().toLowerCase().trim().contains(value)||notes.getBangla().toLowerCase().trim().contains(value)){
                         filterList.add(notes);
                     }
@@ -171,13 +169,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView english,bangla;
         ImageView voiceImage;
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView){
             super(itemView);
             english= itemView.findViewById(R.id.englishTextViewId);
             bangla= itemView.findViewById(R.id.banglaTextViewId);
             voiceImage= itemView.findViewById(R.id.voiceImageViewId);
-
-
 
         }
     }
@@ -212,12 +208,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
                     return;
                 }
 
-                long status = databaseHelper.updateData(new Notes(allNotes.get(position).getId(),
+                long status = databaseHelper.updateData(new Note(allNotes.get(position).getId(),
                         englishValue,banglaValue));
                 if (status == 1){
                     alertDialog.dismiss();
                     allNotes.clear();
-                    allNotes.addAll(databaseHelper.getAllNotes());
+                    allNotes.addAll((Collection<? extends Note>) databaseHelper.getAllNotes());
                     notifyDataSetChanged();
                     Toast.makeText(context, "Successfully Updated", Toast.LENGTH_SHORT).show();
                 }else {

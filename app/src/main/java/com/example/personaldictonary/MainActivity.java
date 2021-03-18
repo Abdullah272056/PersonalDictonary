@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton addButton;
     Context context;
     DataBaseHelper dataBaseHelper;
-    List<Notes>dataList;
+    List<Note>dataList;
     CustomAdapter customAdapter;
 
 
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView=findViewById(R.id.recyclerViewId);
         dataBaseHelper=new DataBaseHelper(MainActivity.this);
         dataBaseHelper.getWritableDatabase();
+
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         loadData();
 
@@ -54,7 +56,9 @@ public class MainActivity extends AppCompatActivity {
     private void loadData() {
         dataList  = new ArrayList<>();
         dataList = dataBaseHelper.getAllNotes();
+
         if (dataList.size() > 0){
+            Collections.reverse(dataList);
             customAdapter = new CustomAdapter(context,dataList);
             recyclerView.setAdapter(customAdapter);
             customAdapter.notifyDataSetChanged();
@@ -91,8 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     banglaWordEditText.setError("Enter Value");
                     return;
                 }
-
-                long id=dataBaseHelper.insertData(new Notes(englishWord,banglaWord));
+                long id=dataBaseHelper.insertData(new Note(englishWord,banglaWord));
 
                 if (id != -1){
                     alertDialog.dismiss();
@@ -119,13 +122,16 @@ public class MainActivity extends AppCompatActivity {
         androidx.appcompat.widget.SearchView searchView = (androidx.appcompat.widget.SearchView) menuItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(String query){
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                customAdapter.getFilter().filter(newText);
+                if (dataList.size()>0){
+                    customAdapter.getFilter().filter(newText);
+                }
+
                 return true;
             }
         });
