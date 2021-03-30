@@ -40,6 +40,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         long id=sqLiteDatabase.insert(Constants.TABLE_NAME,null,contentValues);
         return id;
+
     }
 
 
